@@ -55,3 +55,8 @@ jobs:
           branch: gh_actions_builds 
           force: false
           github_token: ${{ secrets.GITHUB_TOKEN }}
+  
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: main.pdf
