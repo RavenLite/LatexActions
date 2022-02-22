@@ -62,12 +62,17 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Notify
-        uses: whatwewant/action-robot-feishu@v0.0.1
-        with:
-          url: ${{ secrets.FEISHU_ROBOT_WEBHOOK_URL }}
-          title: Compile and release Successfully!
-          text: |
-            from Github Action
-            repository: ${{ secrets.VIEW_GITHUB_PAGES }}
-            releases: ${{ secrets.VIEW_GITHUB_RELEASES }}
-            pages (~2mins delay): ${{ secrets.VIEW_GITHUB_PAGES }}
+        uses: xiachufang/actions-feishu@v1.2
+        env:
+          ACTIONS_FEISHU_TAG: 'v1.3.1'
+          INPUT_WEBHOOK: "${{ secrets.FEISHU_ROBOT_WEBHOOK_URL }}"
+          INPUT_MESSAGE_TYPE: "post"
+          INPUT_TITLE: "Compile and release Successfully!"
+          INPUT_CONTENT: "from Github Action\n
+                          repository: ${{ secrets.VIEW_GITHUB_PAGES }}\n
+                          releases: ${{ secrets.VIEW_GITHUB_RELEASES }}\n
+                          pages (~2mins delay): ${{ secrets.VIEW_GITHUB_PAGES }}"
+        run: |
+          wget -q https://github.com/xiachufang/actions-feishu/releases/download/${{ env.ACTIONS_FEISHU_TAG }}/linux-amd64-actions-feishu.tar.gz
+          tar zxf linux-amd64-actions-feishu.tar.gz feishu
+          ./feishu
