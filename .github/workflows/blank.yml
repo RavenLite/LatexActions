@@ -46,7 +46,7 @@ jobs:
           git config --local user.email "raven.xu98@gmail.com"
           git config --local user.name "Raven Xu"
           mv $HOME/main.pdf $(pwd) # bring it back 
-          git add main.pdf
+          git add -f main.pdf
           git commit -m "Updated by GitHub Action Automatically"
           
       - name: push pdf
