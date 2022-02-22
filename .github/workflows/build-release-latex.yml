@@ -4,28 +4,25 @@ on:
   push:
     branches: [ main ]
     tags:
-    - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+    - 'v*'
   pull_request:
     branches: [ main ]
 
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 jobs:
-  build_latex:
-    # The type of runner that the job will run on
+  build_release_latex:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v2
 
-      # Runs a single command using the runners shell
       - name: Compile LaTeX document
         uses: xu-cheng/latex-action@v2
         with:
           root_file: main.tex
           
-      - name: stash pdf
+      - name: Stash PDF
         run: |
           mv main.pdf $HOME # cache the file
           
@@ -36,12 +33,12 @@ jobs:
         with:
           branch: gh_actions_builds
           
-      - name: checkout gh_actions_builds branch
+      - name: Checkout gh_actions_builds Branch
         uses: actions/checkout@v1
         with:
           ref: gh_actions_builds 
           
-      - name: commit pdf
+      - name: Commit PDF
         run: |
           git config --local user.email "raven.xu98@gmail.com"
           git config --local user.name "Raven Xu"
@@ -49,7 +46,7 @@ jobs:
           git add -f main.pdf
           git commit -m "Updated by GitHub Action Automatically"
           
-      - name: push pdf
+      - name: Push PDF
         uses: ad-m/github-push-action@v0.5.0
         with: 
           branch: gh_actions_builds 
@@ -58,5 +55,8 @@ jobs:
   
       - name: Release
         uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
         with:
           files: main.pdf
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
