@@ -60,3 +60,14 @@ jobs:
           files: main.pdf
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Notify
+        uses: whatwewant/action-robot-feishu@v0.0.1
+        with:
+          url: ${{ secrets.FEISHU_ROBOT_WEBHOOK_URL }}
+          title: Compile and release Successfully!
+          text: |
+            from Github Action
+            repository: ${{ secrets.VIEW_GITHUB_PAGES }}
+            releases: ${{ secrets.VIEW_GITHUB_RELEASES }}
+            pages (~2mins delay): ${{ secrets.VIEW_GITHUB_PAGES }}
